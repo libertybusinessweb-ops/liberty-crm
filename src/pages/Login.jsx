@@ -1,11 +1,24 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { RiBriefcaseLine, RiEyeLine, RiEyeOffLine, RiLoader4Line } from 'react-icons/ri'
+import { RiEyeLine, RiEyeOffLine, RiLoader4Line } from 'react-icons/ri'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 
+function LibertyIcon() {
+  return (
+    <svg viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-14 h-12">
+      {/* Back blue bracket */}
+      <path d="M0 14 L0 46 L32 46 L32 38 L8 38 L8 14 Z" fill="#1876d5" />
+      {/* Mid blue bracket */}
+      <path d="M8 6 L8 38 L40 38 L40 30 L16 30 L16 6 Z" fill="#1876d5" opacity="0.75" />
+      {/* Orange bracket */}
+      <path d="M16 0 L16 22 L40 22 L40 14 L24 14 L24 0 Z" fill="#f25a22" />
+    </svg>
+  )
+}
+
 export default function Login() {
-  const { signIn, isAdmin } = useAuth()
+  const { signIn } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -27,7 +40,6 @@ export default function Login() {
     }
 
     toast.success('Welcome back!')
-    // Navigation handled by App.jsx auth check — but for speed:
     navigate('/my-leads')
   }
 
@@ -35,18 +47,18 @@ export default function Login() {
     <div className="min-h-screen bg-bg-base flex items-center justify-center p-4">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-accent-blue/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent-blue/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl" style={{ background: 'rgba(242,90,34,0.04)' }} />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl" style={{ background: 'rgba(24,118,213,0.05)' }} />
       </div>
 
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent-blue mb-4 shadow-lg shadow-accent-blue/30">
-            <RiBriefcaseLine size={32} className="text-white" />
+          <div className="inline-flex items-center justify-center mb-4">
+            <LibertyIcon />
           </div>
-          <h1 className="text-2xl font-bold text-text-primary">Liberty CRM</h1>
-          <p className="text-text-muted mt-1">Sign in to your account</p>
+          <h1 className="text-2xl font-bold" style={{ color: '#1876d5' }}>Liberty Business CRM</h1>
+          <p className="text-text-muted mt-1 text-sm">Sign in to your account</p>
         </div>
 
         {/* Card */}
@@ -97,7 +109,10 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary justify-center py-3 text-base font-semibold"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-base font-semibold text-white transition-all duration-200 disabled:opacity-60"
+              style={{ background: loading ? '#c44a1a' : '#f25a22' }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#d94e1c' }}
+              onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#f25a22' }}
             >
               {loading ? (
                 <><RiLoader4Line size={18} className="animate-spin" /> Signing in...</>
