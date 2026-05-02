@@ -2,11 +2,21 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
   RiDashboardLine, RiUserLine, RiGroupLine, RiFileList3Line,
-  RiSettings3Line, RiLogoutBoxLine, RiMenuFoldLine, RiMenuUnfoldLine,
-  RiBriefcaseLine,
+  RiLogoutBoxLine, RiMenuFoldLine, RiMenuUnfoldLine,
 } from 'react-icons/ri'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
+
+function LibertyIcon({ size = 'md' }) {
+  const cls = size === 'sm' ? 'w-7 h-6' : 'w-9 h-8'
+  return (
+    <svg viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${cls} flex-shrink-0`}>
+      <path d="M0 14 L0 46 L32 46 L32 38 L8 38 L8 14 Z" fill="#1876d5" />
+      <path d="M8 6 L8 38 L40 38 L40 30 L16 30 L16 6 Z" fill="#1876d5" opacity="0.75" />
+      <path d="M16 0 L16 22 L40 22 L40 14 L24 14 L24 0 Z" fill="#f25a22" />
+    </svg>
+  )
+}
 
 const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: RiDashboardLine, adminOnly: true },
@@ -37,13 +47,11 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className={`flex items-center gap-3 px-4 py-5 border-b border-border-subtle ${collapsed ? 'justify-center' : ''}`}>
-        <div className="w-8 h-8 rounded-lg bg-accent-blue flex items-center justify-center flex-shrink-0">
-          <RiBriefcaseLine size={18} className="text-white" />
-        </div>
+        <LibertyIcon size={collapsed ? 'sm' : 'md'} />
         {!collapsed && (
-          <div>
-            <p className="font-bold text-sm text-text-primary leading-tight">Liberty CRM</p>
-            <p className="text-xs text-text-muted leading-tight">Business Platform</p>
+          <div className="min-w-0">
+            <p className="font-bold text-sm leading-tight" style={{ color: '#1876d5' }}>Liberty Business</p>
+            <p className="text-xs text-text-muted leading-tight">CRM Platform</p>
           </div>
         )}
       </div>
@@ -55,17 +63,26 @@ export default function Sidebar() {
             key={path}
             to={path}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 group ${
+              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${
                 isActive
-                  ? 'bg-accent-blue/15 text-accent-blue border border-accent-blue/20'
+                  ? 'border'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
               } ${collapsed ? 'justify-center' : ''}`
             }
+            style={({ isActive }) => isActive ? {
+              background: 'rgba(242,90,34,0.12)',
+              color: '#f25a22',
+              borderColor: 'rgba(242,90,34,0.25)',
+            } : {}}
             title={collapsed ? label : undefined}
           >
             {({ isActive }) => (
               <>
-                <Icon size={18} className={`flex-shrink-0 ${isActive ? 'text-accent-blue' : ''}`} />
+                <Icon
+                  size={18}
+                  className="flex-shrink-0"
+                  style={isActive ? { color: '#f25a22' } : {}}
+                />
                 {!collapsed && <span>{label}</span>}
               </>
             )}
@@ -78,7 +95,10 @@ export default function Sidebar() {
         {/* User profile */}
         {!collapsed && (
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
-            <div className="w-8 h-8 rounded-full bg-accent-blue/20 flex items-center justify-center flex-shrink-0 text-accent-blue font-semibold text-sm">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-sm text-white"
+              style={{ background: '#f25a22' }}
+            >
               {profile?.full_name?.charAt(0)?.toUpperCase() || 'U'}
             </div>
             <div className="min-w-0">
