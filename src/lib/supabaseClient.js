@@ -12,5 +12,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    lock: (name, acquireTimeout, fn) => fn(),  // disable Web Locks API to prevent lock conflicts
   },
 })
