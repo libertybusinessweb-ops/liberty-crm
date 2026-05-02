@@ -9,6 +9,7 @@ import MyLeads from './pages/MyLeads'
 import LeadDetail from './pages/LeadDetail'
 import AllLeads from './pages/AllLeads'
 import UserManagement from './pages/UserManagement'
+import ImportLeads from './pages/ImportLeads'
 
 function ProtectedLayout({ children, adminOnly = false }) {
   const { user, profile, loading, isAdmin } = useAuth()
@@ -101,6 +102,15 @@ function AppRoutes() {
         element={
           <ProtectedLayout adminOnly>
             <UserManagement />
+          </ProtectedLayout>
+        }
+      />
+
+      <Route
+        path="/import-leads"
+        element={
+          <ProtectedLayout adminOnly>
+            <ImportLeads />
           </ProtectedLayout>
         }
       />
