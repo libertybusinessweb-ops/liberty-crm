@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
   RiDashboardLine, RiUserLine, RiGroupLine, RiFileList3Line,
-  RiLogoutBoxLine, RiMenuFoldLine, RiMenuUnfoldLine,
+  RiLogoutBoxLine, RiMenuFoldLine, RiMenuUnfoldLine, RiUploadLine,
 } from 'react-icons/ri'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: RiDashboardLine, adminOnly: true },
   { path: '/my-leads', label: 'My Leads', icon: RiFileList3Line },
   { path: '/leads', label: 'All Leads', icon: RiGroupLine, adminOnly: true },
+  { path: '/import-leads', label: 'Import Leads', icon: RiUploadLine, adminOnly: true },
   { path: '/users', label: 'Team', icon: RiUserLine, adminOnly: true },
 ]
 
