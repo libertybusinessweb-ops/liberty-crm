@@ -10,9 +10,12 @@ import LeadDetail from './pages/LeadDetail'
 import AllLeads from './pages/AllLeads'
 import UserManagement from './pages/UserManagement'
 import ImportLeads from './pages/ImportLeads'
+import AcceptInvite from './pages/AcceptInvite'
 
-function ProtectedLayout({ children, adminOnly = false }) {
-  const { user, profile, loading, isAdmin } = useAuth()
+// roles: array of allowed roles, e.g. ['admin','co-admin']
+// adminOnly kept for compat
+function ProtectedLayout({ children, adminOnly = false, roles }) {
+  const { user, profile, loading, role, isAdmin } = useAuth()
 
   if (loading) {
     return (
@@ -21,30 +24,21 @@ function ProtectedLayout({ children, adminOnly = false }) {
           <div className="w-10 h-10 rounded-xl bg-accent-blue/20 flex items-center justify-center">
             <div className="w-5 h-5 border-2 border-accent-blue border-t-transparent rounded-full animate-spin" />
           </div>
-          <p className="text-text-muted text-sm">Loading...</p>
+          <p className="text-sm text-text-muted">Cargando...</p>
         </div>
       </div>
     )
   }
 
-  if (!user || !profile) return <Navigate to="/login" replace />
-  if (adminOnly && !isAdmin) return <Navigate to="/my-leads" replace />
+  if (!user) return <Navigate to="/login" replace />
+  if (adminOnly && !isAdmin) return <Navigate to="/dashboard" replace />
+  if (roles && !roles.includes(role)) return <Navigate to="/dashboard" replace />
 
-  return (
-    <div className="flex min-h-screen bg-bg-base">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <TopBar />
-        <main className="flex-1 overflow-auto">
-          {children}
-        </main>
-      </div>
-    </div>
-  )
+  return children
 }
 
 function AppRoutes() {
-  const { user, profile, loading, isAdmin } = useAuth()
+  const { user, loading } = useAuth()
 
   if (loading) {
     return (
@@ -54,80 +48,61 @@ function AppRoutes() {
     )
   }
 
+  if (!user) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/accept-invite" element={<AcceptInvite />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    )
+  }
+
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={user && profile ? <Navigate to={isAdmin ? '/dashboard' : '/my-leads'} replace /> : <Login />}
-      />
-
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedLayout adminOnly>
-            <Dashboard />
-          </ProtectedLayout>
-        }
-      />
-
-      <Route
-        path="/my-leads"
-        element={
-          <ProtectedLayout>
-            <MyLeads />
-          </ProtectedLayout>
-        }
-      />
-
-      <Route
-        path="/leads/:id"
-        element={
-          <ProtectedLayout>
-            <LeadDetail />
-          </ProtectedLayout>
-        }
-      />
-
-      <Route
-        path="/leads"
-        element={
-          <ProtectedLayout adminOnly>
-            <AllLeads />
-          </ProtectedLayout>
-        }
-      />
-
-      <Route
-        path="/users"
-        element={
-          <ProtectedLayout adminOnly>
-            <UserManagement />
-          </ProtectedLayout>
-        }
-      />
-
-      <Route
-        path="/import-leads"
-        element={
-          <ProtectedLayout adminOnly>
-            <ImportLeads />
-          </ProtectedLayout>
-        }
-      />
-
-      <Route
-        path="*"
-        element={
-          user && profile
-            ? <Navigate to={isAdmin ? '/dashboard' : '/my-leads'} replace />
-            : <Navigate to="/login" replace />
-        }
-      />
-    </Routes>
+    <div className="flex h-screen bg-bg-base overflow-hidden">
+      <Sidebar />
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <TopBar />
+        <main className="flex-1 overflow-auto p-6">
+          <Routes>
+            <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/accept-invite" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/my-leads" element={<MyLeads />} />
+            <Route path="/leads/:id" element={<LeadDetail />} />
+            <Route
+              path="/leads"
+              element={
+                <ProtectedLayout roles={['admin', 'co-admin', 'viewer']}>
+                  <AllLeads />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/import-leads"
+              element={
+                <ProtectedLayout roles={['admin', 'co-admin']}>
+                  <ImportLeads />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <ProtectedLayout roles={['admin', 'co-admin']}>
+                  <UserManagement />
+                </ProtectedLayout>
+              }
+            />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
   )
 }
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -142,15 +117,13 @@ export default function App() {
               borderRadius: '12px',
               fontSize: '14px',
             },
-            success: {
-              iconTheme: { primary: '#10b981', secondary: '#1a1d27' },
-            },
-            error: {
-              iconTheme: { primary: '#ef4444', secondary: '#1a1d27' },
-            },
+            success: { iconTheme: { primary: '#10b981', secondary: '#1a1d27' } },
+            error:   { iconTheme: { primary: '#ef4444', secondary: '#1a1d27' } },
           }}
         />
       </AuthProvider>
     </BrowserRouter>
   )
 }
+
+export default App
