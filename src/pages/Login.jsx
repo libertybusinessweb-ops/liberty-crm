@@ -6,13 +6,11 @@ import toast from 'react-hot-toast'
 
 function LibertyIcon() {
   return (
-    <svg viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-14 h-12">
-      {/* Back blue bracket */}
-      <path d="M0 14 L0 46 L32 46 L32 38 L8 38 L8 14 Z" fill="#1876d5" />
-      {/* Mid blue bracket */}
-      <path d="M8 6 L8 38 L40 38 L40 30 L16 30 L16 6 Z" fill="#1876d5" opacity="0.75" />
-      {/* Orange bracket */}
-      <path d="M16 0 L16 22 L40 22 L40 14 L24 14 L24 0 Z" fill="#f25a22" />
+    <svg viewBox="0 0 96 88" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-16 h-14">
+      <path d="M 48 8 L 18 8 Q 8 8 8 18 L 8 70 Q 8 80 18 80 L 78 80 Q 88 80 88 70 L 88 44"
+        stroke="#0071CE" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M 48 80 L 78 80 Q 88 80 88 70 L 88 18 Q 88 8 78 8 L 18 8 Q 8 8 8 18 L 8 44"
+        stroke="#FF5300" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -85,7 +83,7 @@ export default function Login() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
                   className="input-field pr-10"
                   required
                   autoComplete="current-password"
